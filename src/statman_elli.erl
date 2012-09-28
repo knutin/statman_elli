@@ -134,6 +134,8 @@ key({A, B}) ->
 
 key(A) when is_atom(A) ->
     atom_to_binary(A, utf8);
+key(I) when is_integer(I) ->
+    list_to_binary(integer_to_list(I));
 key(B) when is_binary(B) ->
     B.
 
