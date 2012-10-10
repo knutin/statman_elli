@@ -161,6 +161,7 @@ example_logger() ->
 
                   statman_counter:incr({node(), foo}),
 
+                  Start = now(),
                   statman_histogram:record_value(
                     {<<"/highscores">>, total}, random:uniform(100) * 1000),
 
@@ -181,6 +182,13 @@ example_logger() ->
 
                   statman_histogram:record_value(
                     {<<"/highscores">>, {location, game_logic}}, random:uniform(10) * 1000),
+
+                  statman_histogram:record_value(
+                    {<<"/highscores">>, {ext, <<"graph.facebook.com">>}},
+                    random:uniform(20) * 1000),
+
+                  statman_histogram:record_value(
+                    {statman, example_dump}, timer:now_diff(now(), Start)),
 
                   F(F)
           end,

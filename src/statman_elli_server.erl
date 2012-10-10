@@ -27,7 +27,6 @@ add_client(Ref) ->
 %%%===================================================================
 
 init([]) ->
-    ets:new(?COUNTERS_TABLE, [named_table, protected, set]),
     timer:send_interval(1000, pull),
     {ok, #state{clients = []}}.
 
@@ -108,29 +107,16 @@ metric2stats(Metric) ->
             end;
         counter ->
             {Id, Key} = statman_elli:id_key(Metric),
-            CounterKey = {get_node(Metric), statman_elli:id_key(Metric)},
-            Prev = prev_count(CounterKey),
 
-            Delta = value(Metric) - Prev,
-            ets:insert(?COUNTERS_TABLE, {CounterKey, value(Metric)}),
             [{[{id, Id}, {key, Key},
                {type, counter},
                {node, get_node(Metric)},
-               {rate, Delta / window(Metric)}]}];
+               {rate, value(Metric)}]}];
         gauge ->
             {Id, Key} = statman_elli:id_key(Metric),
             [{[{id, Id}, {key, Key},
                {type, gauge},
                {node, get_node(Metric)},
                {value, value(Metric)}]}]
-    end.
-
-
-prev_count(Key) ->
-    case ets:lookup(?COUNTERS_TABLE, Key) of
-        [{Key, Count}] ->
-            Count;
-        [] ->
-            0
     end.
 
