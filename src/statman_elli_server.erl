@@ -47,7 +47,12 @@ handle_info(pull, State) ->
             {noreply, State#state{clients = NewClients}};
         {'EXIT', _} ->
             {noreply, State}
-    end.
+    end;
+handle_info(_, State) ->
+    %% A statman_aggregator call that times out might deliver the
+    %% reply later. Ignore those messages.
+    {noreply, State}.
+
 
 terminate(_Reason, _State) ->
     ok.
