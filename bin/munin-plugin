@@ -129,7 +129,7 @@ else:
 
         elif metric['type'] == "counter":
             print("multigraph {0}_minute".format(md5(n)))
-            print("{0}.value {1}".format(n, metric['value']))
+            print("{0}.value {1}".format(n, metric['value'] / 5))
 
             print("multigraph {0}_second".format(md5(n)))
-            print("{0}.value {1}".format(n, metric['value']))
+            print("{0}.value {1}".format(n, metric['value'] / (5 * 60)))
