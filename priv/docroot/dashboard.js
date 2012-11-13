@@ -40,7 +40,7 @@ function id(c) {
 function display_rates(counters) {
     var nodes = _.uniq(_.map(counters, function (c) {
         if (c["node"] instanceof Array) {
-            return c['node'].join(",");
+            return c['node'].sort().join(",");
         }
         return c['node']
     }));
