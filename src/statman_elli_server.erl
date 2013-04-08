@@ -36,6 +36,8 @@ handle_call({add_client, Ref}, _From, #state{clients = Clients} = State) ->
 handle_cast(_, State) ->
     {noreply, State}.
 
+handle_info(pull, #state{clients = []} = State) ->
+    {noreply, State};
 handle_info(pull, State) ->
     case catch statman_aggregator:get_window(1) of
         {ok, Metrics} ->
