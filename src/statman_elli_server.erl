@@ -3,7 +3,7 @@
 -module(statman_elli_server).
 -behaviour(gen_server).
 
--export([start_link/0, add_client/1]).
+-export([start_link/0, start_link/1, add_client/1]).
 
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
@@ -12,12 +12,17 @@
 -define(COUNTERS_TABLE, statman_elli_server_counters).
 -define(a2b(A), list_to_binary(atom_to_list(A))).
 
+-define(DEFAULT_WINDOW, 1).
+
 %%%===================================================================
 %%% API
 %%%===================================================================
 
 start_link() ->
-    gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+    start_link([{window, ?DEFAULT_WINDOW}]).
+
+start_link(Args) ->
+    gen_server:start_link({local, ?MODULE}, ?MODULE, Args, []).
 
 add_client(Ref) ->
     gen_server:call(?MODULE, {add_client, Ref}).
@@ -26,8 +31,9 @@ add_client(Ref) ->
 %%% gen_server callbacks
 %%%===================================================================
 
-init([]) ->
-    timer:send_interval(1000, pull),
+init(Args) ->
+    Window = proplists:get_value(window, Args, ?DEFAULT_WINDOW),
+    timer:send_interval(Window * 1000, {pull, Window}),
     {ok, #state{clients = []}}.
 
 handle_call({add_client, Ref}, _From, #state{clients = Clients} = State) ->
@@ -36,10 +42,10 @@ handle_call({add_client, Ref}, _From, #state{clients = Clients} = State) ->
 handle_cast(_, State) ->
     {noreply, State}.
 
-handle_info(pull, #state{clients = []} = State) ->
+handle_info({pull, _Window}, #state{clients = []} = State) ->
     {noreply, State};
-handle_info(pull, State) ->
-    case catch statman_aggregator:get_window(1) of
+handle_info({pull, Window}, State) ->
+    case catch statman_aggregator:get_window(Window) of
         {ok, Metrics} ->
             Json = lists:flatmap(fun metric2stats/1, Metrics),
             Chunk = ["data: ", jiffy:encode({[{metrics, Json}]}), "\n\n"],
@@ -80,7 +86,7 @@ notify_subscribers(Subscribers, Chunk) ->
       end, Subscribers).
 
 window(Metric) ->
-    proplists:get_value(window, Metric, 1000) / 1000.
+    proplists:get_value(window, Metric, ?DEFAULT_WINDOW * 1000) / 1000.
 
 value(Metric) ->
     proplists:get_value(value, Metric).
