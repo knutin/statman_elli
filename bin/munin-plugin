@@ -8,7 +8,10 @@ import os
 URL = os.environ.get('STATMAN_URL') or "http://localhost:8080/statman/summary"
 CATEGORY = os.environ.get('STATMAN_CATEGORY') or "statman"
 
-data = json.loads(urllib.request.urlopen(URL).read().decode())
+try:
+    data = json.loads(urllib.request.urlopen(URL).read().decode())
+except urllib.error.URLError:
+    sys.exit(0)
 
 
 PERCENTILES = [("p25", "25th percentile"),
