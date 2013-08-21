@@ -23,7 +23,7 @@ handle(Req, Config) ->
             WindowSize = list_to_integer(
                            binary_to_list(
                              elli_request:get_arg(<<"window">>, Req, <<"300">>))),
-            {ok, Metrics} = statman_aggregator:get_window(WindowSize),
+            {ok, Metrics} = statman_aggregator:get_window(WindowSize, 10000),
 
             {ok, [{<<"Content-Type">>, <<"application/json">>}],
              jiffy:encode({[{metrics, lists:flatmap(fun metric2stats/1, Metrics)}]})};
@@ -32,7 +32,7 @@ handle(Req, Config) ->
             WindowSize = list_to_integer(
                            binary_to_list(
                              elli_request:get_arg(<<"window">>, Req, <<"300">>))),
-            {ok, Metrics} = statman_aggregator:get_window(WindowSize),
+            {ok, Metrics} = statman_aggregator:get_window(WindowSize, 10000),
 
             {ok, [{<<"Content-Type">>, <<"application/json">>}],
              jiffy:encode({[{metrics, lists:map(fun metric2json/1, Metrics)}]})};
