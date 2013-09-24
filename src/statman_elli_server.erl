@@ -42,7 +42,10 @@ handle_info(pull, State) ->
     case catch statman_aggregator:get_window(1) of
         {ok, Metrics} ->
             Json = lists:flatmap(fun metric2stats/1, Metrics),
-            Chunk = ["data: ", jiffy:encode({[{metrics, Json}]}), "\n\n"],
+            {ok, Hostname} = inet:gethostname(),
+            Chunk = ["data: ", jiffy:encode({[{metrics, Json},
+                                              {hostname, list_to_binary(Hostname)}]}),
+                     "\n\n"],
             NewClients = notify_subscribers(State#state.clients, Chunk),
 
             {noreply, State#state{clients = NewClients}};

@@ -21,6 +21,8 @@ $(document).ready(function() {
         display_gauges(by_type(data, 'gauge'));
         display_histograms(by_type(data, 'histogram'));
         display_node_histograms(by_type(data, 'histogram'));
+
+        $("title").text("statman@" + data["hostname"]);
     };
 });
 
