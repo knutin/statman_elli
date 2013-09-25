@@ -22,7 +22,9 @@ $(document).ready(function() {
         display_histograms(by_type(data, 'histogram'));
         display_node_histograms(by_type(data, 'histogram'));
 
-        $("title").text("statman@" + data["hostname"]);
+        var nodeName = "statman@" + data["hostname"];
+        $("title").text(nodeName);
+        $("#nodename").text(nodeName);
     };
 });
 
