@@ -26,7 +26,8 @@ handle(Req, Config) ->
             {ok, Metrics} = statman_aggregator:get_window(WindowSize, 10000),
 
             {ok, [{<<"Content-Type">>, <<"application/json">>}],
-             jiffy:encode({[{metrics, lists:flatmap(fun metric2stats/1, Metrics)}]})};
+             iolist_to_binary(
+               jiffy:encode({[{metrics, lists:flatmap(fun metric2stats/1, Metrics)}]}))};
 
         [<<"statman">>, <<"raw">>] ->
             WindowSize = list_to_integer(
@@ -35,7 +36,8 @@ handle(Req, Config) ->
             {ok, Metrics} = statman_aggregator:get_window(WindowSize, 10000),
 
             {ok, [{<<"Content-Type">>, <<"application/json">>}],
-             jiffy:encode({[{metrics, lists:map(fun metric2json/1, Metrics)}]})};
+             iolist_to_binary(
+               jiffy:encode({[{metrics, lists:map(fun metric2json/1, Metrics)}]}))};
 
 
         [<<"statman">>, <<"media">> | Path] ->
