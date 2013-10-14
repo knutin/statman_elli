@@ -70,7 +70,7 @@ function display_rates(counters) {
             }
         });
 
-        $("#counters tbody:last").append("<tr><td>" + key + "</td>" +
+        $("#counters tbody:last").append("<tr><td align=\"right\">" + key + "</td>" +
                                          counter_tds +
                                          "</tr>");
     });
@@ -98,7 +98,7 @@ function display_gauges(gauges) {
         var gauges_tds = _.map(nodes, function (n) {
             var d = _.find(grouped[key], function (c) { return c['node'] == n });
             if(d) {
-                return "<td>" + d['value'] + "</td>";
+                return "<td align=\"right\">" + d['value'] + "</td>";
             } else {
                 return "<td></td>";
             }
