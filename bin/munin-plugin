@@ -7,10 +7,12 @@ import os
 
 
 URL = os.environ.get('STATMAN_URL') or "http://localhost:8080/statman/summary"
+USER = os.environ.get('STATMAN_USER') or None
+PASS = os.environ.get('STATMAN_PASS') or None
 CATEGORY = os.environ.get('STATMAN_CATEGORY') or "statman"
 
 try:
-    data = requests.get(URL).json()
+    data = requests.get(URL, auth = (USER, PASS)).json()
 except Exception as e:
     sys.exit(1)
 
