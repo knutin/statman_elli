@@ -40,7 +40,6 @@ function id(c) {
     }
 }
 
-
 function display_rates(counters) {
     var nodes = _.uniq(_.map(counters, function (c) {
         if (c["node"] instanceof Array) {
@@ -64,7 +63,7 @@ function display_rates(counters) {
         var counter_tds = _.map(nodes, function (n) {
             var d = _.find(grouped[key], function (c) { return c['node'] == n });
             if(d) {
-                return "<td>" + d['rate'] + "</td>";
+                return "<td>" + format_value(d['rate']) + "</td>";
             } else {
                 return "<td></td>";
             }
@@ -98,7 +97,7 @@ function display_gauges(gauges) {
         var gauges_tds = _.map(nodes, function (n) {
             var d = _.find(grouped[key], function (c) { return c['node'] == n });
             if(d) {
-                return "<td align=\"right\">" + d['value'] + "</td>";
+                return "<td align=\"right\">" + format_value(d['value']) + "</td>";
             } else {
                 return "<td></td>";
             }
@@ -180,8 +179,10 @@ function display_node_histograms(all_histograms) {
 }
 
 
-
-
 function format_us(us) {
-    return (us / 1000).toFixed(4);
+    return format_value( (us / 1000).toFixed(4) );
+}
+
+function format_value(value) {
+    return numeral(value).format('0,0a');
 }
