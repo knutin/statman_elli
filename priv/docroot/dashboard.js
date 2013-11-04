@@ -51,7 +51,7 @@ function display_rates(counters) {
     var ids = _.uniq(_.map(counters, id));
 
     var headers = _.map(nodes, function (node) {
-        return "<th>" + node + "</th>";
+        return "<th style=\"text-align:right\">" + node + "</th>";
     });
     var header_str = "<tr><th></th>" + headers + "</tr>";
     $("#counters thead:last").append(header_str);
@@ -63,7 +63,7 @@ function display_rates(counters) {
         var counter_tds = _.map(nodes, function (n) {
             var d = _.find(grouped[key], function (c) { return c['node'] == n });
             if(d) {
-                return "<td>" + format_value(d['rate']) + "</td>";
+                return "<td style=\"text-align:right\">" + format_value(d['rate']) + "</td>";
             } else {
                 return "<td></td>";
             }
@@ -85,7 +85,7 @@ function display_gauges(gauges) {
     }));
 
     var headers = _.map(nodes, function (node) {
-        return "<th>" + node + "</th>";
+        return "<th style=\"text-align:right\">" + node + "</th>";
     });
     var header_str = "<tr><th>Node</th>" + headers + "</tr>";
     $("#gauges thead:last").append(header_str);
