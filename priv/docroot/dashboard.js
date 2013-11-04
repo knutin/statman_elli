@@ -97,7 +97,7 @@ function display_gauges(gauges) {
         var gauges_tds = _.map(nodes, function (n) {
             var d = _.find(grouped[key], function (c) { return c['node'] == n });
             if(d) {
-                return "<td style=\"text-align:right\"><span tile=\"" + d['value'] + "\">" + format_value(d['value']) + "</span></td>";
+                return "<td style=\"text-align:right\">" + format_value(d['value']) + "</td>";
             } else {
                 return "<td></td>";
             }
@@ -184,5 +184,5 @@ function format_us(us) {
 }
 
 function format_value(value) {
-    return numeral(value).format('0,0a');
+    return numeral(value).format('0,0');
 }
