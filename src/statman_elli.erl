@@ -43,6 +43,8 @@ handle(Req, Config) ->
         [<<"statman">>, <<"media">> | Path] ->
             Filepath = filename:join([docroot(Config) | Path]),
             valid_path(Filepath) orelse throw({403, [], <<"Permission denied">>}),
+
+            %%TODO: handle mimetypes
             case file:read_file(Filepath) of
                 {ok, Bin} ->
                     {ok, Bin};
