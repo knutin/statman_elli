@@ -4,6 +4,8 @@ var dashboardControllers = angular.module('dashboardControllers', []);
 dashboardApp.controller('DashboardCtrl', ["$scope",
    function DashboardCtrl($scope) {
 
+       $scope.histograms = [];
+
        // reload data from stream
        var stream = new EventSource("statman/stream");
        stream.addEventListener("message", function (e) {
@@ -26,8 +28,12 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
            $scope.gaugesNodes = $scope.getNodes(gauges);
            $scope.gauges = $scope.postProcessData($scope.gaugesNodes, gauges);
 
-           //TODO: merged histagrams
-           //TODO: node histagrams
+           // merged and node histagrams
+           var histograms = $scope.getByType(data, "histogram");
+           $scope.histograms = $scope.histograms.concat(histograms);
+
+           $scope.mergedHistograms = $scope.postProcessHistograms($scope.histograms);
+           $scope.nodesHistograms = $scope.postProcessNodesHistograms($scope.histograms);
        };
 
        // helpers
@@ -45,6 +51,51 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
                         result.push({"key": key, "value": d.value});
                     }
                 })
+           });
+           return result;
+       };
+       $scope.postProcessHistograms = function(data) {
+           var histograms = _.filter(data, function (h) {
+               return h.node instanceof Array
+           });
+           //console.dir(histograms);
+           var grouped = _.groupBy(histograms, function (h) {
+               return h.id;
+           });
+           //console.dir(grouped);
+           var result = [];
+
+           _.each(grouped, function (grouped, i) {
+               //console.dir(grouped);
+               //var items = histograms[i];
+               //result.push({"histogram": histograms[i]['id'], "values": items});
+           });
+           return result;
+       };
+       $scope.postProcessNodesHistograms = function(data) {
+           var histograms = _.reject(data, function (h) {
+               return h.node instanceof Array
+           });
+           var nodes = _.uniq(_.pluck(histograms, 'node')).sort();
+           var result = [];
+
+           _.each(nodes, function (node) {
+               var grouped = _.groupBy(
+                   _.filter(histograms, function (h) {
+                       return h.node == node;
+                   }),
+                   function (h) { return h.id }
+               );
+               _.each(nodes, function (node) {
+                   _.each(grouped, function (grouped, i) {
+                       var items = [];
+                       var label = node + ": " + i;
+                       _.each(grouped, function (g) {
+                           items.push(g);
+                       });
+                       result.push({"label": label, "items": items});
+                   });
+               });
            });
            return result;
        };
