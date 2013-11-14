@@ -39,15 +39,12 @@ handle(Req, Config) ->
              iolist_to_binary(
                jiffy:encode({[{metrics, lists:map(fun metric2json/1, Metrics)}]}))};
 
-
         [<<"statman">>, <<"media">> | Path] ->
             Filepath = filename:join([docroot(Config) | Path]),
             valid_path(Filepath) orelse throw({403, [], <<"Permission denied">>}),
-
-            %%TODO: handle mimetypes
             case file:read_file(Filepath) of
                 {ok, Bin} ->
-                    {ok, Bin};
+                    {ok, get_mimetype(Filepath), Bin};
                 {error, enoent} ->
                     {404, <<"Not found">>}
             end;
@@ -73,6 +70,15 @@ valid_path(Path) ->
         {_, _} -> false;
         nomatch -> true
     end.
+
+get_mimetype(Filepath) ->
+    Ext = filename:extension(Filepath),
+    Type = case list_to_atom(string:substr(Ext, 2, length(Ext))) of
+               css -> <<"text/css">>;
+               js  -> <<"text/javascript">>;
+               _   -> <<"text/plain">>
+           end,
+    [{<<"Content-Type">>, Type}].
 
 metric2json(Metric) ->
     {Id, Key} = id_key(Metric),
