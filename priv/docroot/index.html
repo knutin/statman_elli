@@ -86,70 +86,74 @@
       </div>
 
       <div class="row">
-        <div class="panel panel-default">
-          <div class="panel-heading"><strong>Merged histograms</strong></div>
-          <table id="histograms" class="table table-striped">
-            <thead>
-              <tr>
-                <th></th>
-                <th></th>
-                <th>Rate per second</th>
-                <th>Observations</th>
-                <th>Mean</th>
-                <th>Standard deviation</th>
-                <th>95th</th>
-                <th>99th</th>
-                <th>Max</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="hist in mergedHistograms">
-                <td></td>
-                <td>{{hist.key}}</td>
-                <td>{{hist.rate | formatNumber}}</td>
-                <td>{{hist.observations | formatNumber}}</td>
-                <td>{{hist.mean | formatMs}}ms</td>
-                <td>{{hist.sd | formatNumber}}</td>
-                <td>{{hist.p95 | formatMs}}ms</td>
-                <td>{{hist.p99 | formatMs}}ms</td>
-                <td>{{hist.max | formatMs}}ms</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="col-lg-12">
+          <div class="panel panel-default">
+            <div class="panel-heading"><strong>Merged histograms</strong></div>
+            <table id="histograms" class="table table-striped">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th>Rate per second</th>
+                  <th>Observations</th>
+                  <th>Mean</th>
+                  <th>Standard deviation</th>
+                  <th>95th</th>
+                  <th>99th</th>
+                  <th>Max</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="hist in mergedHistograms">
+                  <td></td>
+                  <td>{{hist.key}}</td>
+                  <td>{{hist.rate | formatNumber}}</td>
+                  <td>{{hist.observations | formatNumber}}</td>
+                  <td>{{hist.mean | formatMs}}ms</td>
+                  <td>{{hist.sd | formatNumber}}</td>
+                  <td>{{hist.p95 | formatMs}}ms</td>
+                  <td>{{hist.p99 | formatMs}}ms</td>
+                  <td>{{hist.max | formatMs}}ms</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       <div class="row">
-        <div class="p`anel panel-default">
-          <div class="panel-heading"><strong>Node histograms</strong></div>
-          <table id="node_histograms" class="table table-striped">
-            <thead>
-              <tr>
-                <th></th>
-                <th></th>
-                <th>Rate per second</th>
-                <th>Observations</th>
-                <th>Mean</th>
-                <th>Standard deviation</th>
-                <th>95th</th>
-                <th>99th</th>
-                <th>Max</th>
-              </tr>
+        <div class="col-lg-12">
+          <div class="p`anel panel-default">
+            <div class="panel-heading"><strong>Node histograms</strong></div>
+            <table id="node_histograms" class="table table-striped">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th>Rate per second</th>
+                  <th>Observations</th>
+                  <th>Mean</th>
+                  <th>Standard deviation</th>
+                  <th>95th</th>
+                  <th>99th</th>
+                  <th>Max</th>
+                </tr>
               </thead>
-            <tbody>
-              <tr ng-repeat="hist in nodesHistograms">
-                <td></td>
-                <td>{{hist.key}}</td>
-                <td>{{hist.rate | formatNumber}}</td>
-                <td>{{hist.observations | formatNumber}}</td>
-                <td>{{hist.mean | formatMs}}ms</td>
-                <td>{{hist.sd | formatNumber}}</td>
-                <td>{{hist.p95 | formatMs}}ms</td>
-                <td>{{hist.p99 | formatMs}}ms</td>
-                <td>{{hist.max | formatMs}}ms</td>
-              </tr>
-            </tbody>
-          </table>
+              <tbody>
+                <tr ng-repeat="hist in nodesHistograms">
+                  <td></td>
+                  <td>{{hist.key}}</td>
+                  <td>{{hist.rate | formatNumber}}</td>
+                  <td>{{hist.observations | formatNumber}}</td>
+                  <td>{{hist.mean | formatMs}}ms</td>
+                  <td>{{hist.sd | formatNumber}}</td>
+                  <td>{{hist.p95 | formatMs}}ms</td>
+                  <td>{{hist.p99 | formatMs}}ms</td>
+                  <td>{{hist.max | formatMs}}ms</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <hr />
