@@ -5,6 +5,6 @@ angular.module('ng').filter('formatNumber', function () {
 });
 angular.module('ng').filter('formatMs', function () {
     return function (value) {
-        return numeral((us / 1000).toFixed(4)).format('0,0');
+        return numeral((value / 1000).toFixed(4)).format('0,0');
     }
 });
