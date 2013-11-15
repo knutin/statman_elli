@@ -73,10 +73,10 @@ valid_path(Path) ->
 
 get_mimetype(Filepath) ->
     Ext = filename:extension(Filepath),
-    Type = case list_to_atom(string:substr(Ext, 2, length(Ext))) of
-               css -> <<"text/css">>;
-               js  -> <<"text/javascript">>;
-               _   -> <<"text/plain">>
+    Type = case lists:last(binary:split(Ext, [<<".">>])) of
+               <<"css">> -> <<"text/css">>;
+               <<"js">>  -> <<"text/javascript">>;
+               _         -> <<"text/plain">>
            end,
     [{<<"Content-Type">>, Type}].
 
@@ -221,8 +221,9 @@ start_demo() ->
                     _ -> <<"unknown">>
                 end
         end,
+    {ok, Cwd} = file:get_cwd(),
     StatsConfig = [{name, elli_stats_demo},
-                   {docroot, "priv/docroot"},
+                   {docroot, filename:join([Cwd, "priv/docroot"])},
                    {identity_fun, IdentityFun}],
 
     Config = [
@@ -231,7 +232,6 @@ start_demo() ->
                       {elli_example_callback, []}
                      ]}
              ],
-
 
     A = setup(a),
     B = setup(b),
@@ -244,7 +244,6 @@ start_demo() ->
     rpc:call(A, statman_gauge_poller, start_link, []),
     rpc:call(B, statman_gauge_poller, start_link, []),
 
-
     elli:start_link([{callback, elli_middleware}, {callback_args, Config}]),
 
     ok.
@@ -256,4 +255,3 @@ setup(Name) ->
     rpc:call(Node, statman_server, start_link, [1000]),
     spawn(Node, ?MODULE, example_logger, []),
     Node.
-
