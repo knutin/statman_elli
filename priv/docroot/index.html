@@ -6,22 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <link rel="apple-touch-icon" href="/bootstrap/img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/bootstrap/img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/bootstrap/img/apple-touch-icon-114x114.png">
     <link href="statman/media/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <style>
       body {
         padding-top: 60px;
-        font-size: small;
+        font-size: 11px;
+      }
+      table {
+        table-layout: fixed;
+      }
+      table th, table td {
+        overflow: hidden;
+      }
+      .alignRight {
+        text-align: right;
       }
     </style>
-    <!-- <link href="statman/media/libs/bootstrap/css/bootstrap-responsive.css" rel="stylesheet"> -->
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link rel="apple-touch-icon" href="/bootstrap/img/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/bootstrap/img/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/bootstrap/img/apple-touch-icon-114x114.png">
   </head>
 
   <body ng-controller="DashboardCtrl">
@@ -36,87 +43,31 @@
         </button>
         <a class="navbar-brand" href="#">statman dashboard</a>
       </div>
-      <p class="nav  navbar-nav navbar-right navbar-text">{{hostname}}</p>
+      <p class="nav navbar-nav navbar-right navbar-text">{{hostname}}</p>
     </nav>
 
     <div class="container">
 
       <div class="row">
-
         <div class="col-lg-6">
           <div class="panel panel-default">
             <div class="panel-heading"><strong>Rates</strong></div>
-            <table id="counters" class="table table-striped">
-              <thead>
-                <tr ng-repeat="node in ratesNodes">
-                  <th>Node</th>
-                  <th style="text-align:right">{{node}}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="rate in rates">
-                  <td>{{rate.key}}</td>
-                  <td style="text-align:right">{{rate.value | formatNumber}}</td>
-                </tr>
-              </tbody>
-            </table>
+            <table class="table table-striped" simple-table data="ratesGrid"></table>
           </div>
         </div>
-
         <div class="col-lg-6">
           <div class="panel panel-default">
             <div class="panel-heading"><strong>Gauges</strong></div>
-            <table id="gauges" class="table table-striped">
-              <thead>
-                <tr ng-repeat="node in gaugesNodes">
-                  <th>Node</th>
-                  <th style="text-align:right">{{node}}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="gauge in gauges">
-                  <td>{{gauge.key}}</td>
-                  <td style="text-align:right">{{gauge.value | formatNumber}}</td>
-                </tr>
-              </tbody>
-            </table>
+            <table class="table table-striped" simple-table data="gaugesGrid"></table>
           </div>
         </div>
-
       </div>
 
       <div class="row">
         <div class="col-lg-12">
           <div class="panel panel-default">
             <div class="panel-heading"><strong>Merged histograms</strong></div>
-            <table id="histograms" class="table table-striped">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th>Rate per second</th>
-                  <th>Observations</th>
-                  <th>Mean</th>
-                  <th>Standard deviation</th>
-                  <th>95th</th>
-                  <th>99th</th>
-                  <th>Max</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="hist in mergedHistograms">
-                  <td></td>
-                  <td>{{hist.key}}</td>
-                  <td>{{hist.rate | formatNumber}}</td>
-                  <td>{{hist.observations | formatNumber}}</td>
-                  <td>{{hist.mean | formatMs}} ms</td>
-                  <td>{{hist.sd | formatNumber}}</td>
-                  <td>{{hist.p95 | formatMs}} ms</td>
-                  <td>{{hist.p99 | formatMs}} ms</td>
-                  <td>{{hist.max | formatMs}} ms</td>
-                </tr>
-              </tbody>
-            </table>
+            <table class="table table-striped" simple-grouped-table data="histMergedGrid"></table>
           </div>
         </div>
       </div>
@@ -125,44 +76,19 @@
         <div class="col-lg-12">
           <div class="p`anel panel-default">
             <div class="panel-heading"><strong>Node histograms</strong></div>
-            <table id="node_histograms" class="table table-striped">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th>Rate per second</th>
-                  <th>Observations</th>
-                  <th>Mean</th>
-                  <th>Standard deviation</th>
-                  <th>95th</th>
-                  <th>99th</th>
-                  <th>Max</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="hist in nodesHistograms">
-                  <td></td>
-                  <td>{{hist.key}}</td>
-                  <td>{{hist.rate | formatNumber}}</td>
-                  <td>{{hist.observations | formatNumber}}</td>
-                  <td>{{hist.mean | formatMs}} ms</td>
-                  <td>{{hist.sd | formatNumber}}</td>
-                  <td>{{hist.p95 | formatMs}} ms</td>
-                  <td>{{hist.p99 | formatMs}} ms</td>
-                  <td>{{hist.max | formatMs}} ms</td>
-                </tr>
-              </tbody>
-            </table>
+            <table class="table table-striped" simple-grouped-table data="histNodesGrid"></table>
           </div>
         </div>
       </div>
       <hr />
       <footer>
-        <p>statman_elli: <a href="http://github.com/knutin/statman_elli/">source</a></p>
+        <p>statman_elli: <a href="http://github.com/knutin/statman_elli/">GitHub</a></p>
       </footer>
     </div>
   </body>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+       -->
+  <script type="text/javascript" src="statman/media/libs/jquery.min.js"></script>
   <script type="text/javascript" src="statman/media/libs/underscore-min.js"></script>
   <script type="text/javascript" src="statman/media/libs/bootstrap/js/bootstrap.js"></script>
   <script type="text/javascript" src="statman/media/libs/numeral/numeral.js"></script>
@@ -170,5 +96,4 @@
   <script type="text/javascript" src="statman/media/libs/angular/angular-route.js"></script>
   <script type="text/javascript" src="statman/media/app.js"></script>
   <script type="text/javascript" src="statman/media/controllers.js"></script>
-  <script type="text/javascript" src="statman/media/filters.js"></script>
 </html>
