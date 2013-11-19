@@ -78,22 +78,9 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
            var result = [];
 
            _.each(grouped, function (grouped, i) {
-               var row = new Object();
-               row.label = grouped[0].id;;
-               row.items = [];
-               _.each(grouped, function (group) {
-                   row.items.push({
-                       "key":  group.key,
-                       "rate": $scope.formatNumber(group.rate),
-                       "observations": $scope.formatNumber(group.observations),
-                       "mean": $scope.formatMs(group.mean),
-                       "sd":   $scope.formatNumber(group.sd),
-                       "p95":  $scope.formatMs(group.p95),
-                       "p99":  $scope.formatMs(group.p99),
-                       "max":  $scope.formatMs(group.max)
-                   });
-               });
-               result.push(row);
+               result.push(
+                   $scope.getHistogramRow(grouped[0].id, grouped)
+               );
            });
            return result;
        };
@@ -112,25 +99,31 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
                    function (h) { return h.id }
                );
                _.each(grouped, function (grouped, i) {
-                   var row = new Object();
-                   row.label = (i == "null") ? node : node + i;
-                   row.items = [];
-                   _.each(grouped, function (group) {
-                       row.items.push({
-                           "key":  group.key,
-                           "rate": $scope.formatNumber(group.rate),
-                           "observations": $scope.formatNumber(group.observations),
-                           "mean": $scope.formatMs(group.mean),
-                           "sd":   $scope.formatNumber(group.sd),
-                           "p95":  $scope.formatMs(group.p95),
-                           "p99":  $scope.formatMs(group.p99),
-                           "max":  $scope.formatMs(group.max)
-                       });
-                   });
-                   result.push(row);
+                   var label = (i == "null") ? node : node + i;
+                   result.push(
+                       $scope.getHistogramRow(label, grouped)
+                   );
                });
            });
            return result;
+       };
+       $scope.getHistogramRow = function (label, grouped) {
+           var row = new Object();
+           row.label = label;
+           row.items = [];
+           _.each(grouped, function (group) {
+               row.items.push({
+                   "key":  group.key,
+                   "rate": $scope.formatNumber(group.rate),
+                   "observations": $scope.formatNumber(group.observations),
+                   "mean": $scope.formatMs(group.mean),
+                   "sd":   $scope.formatNumber(group.sd),
+                   "p95":  $scope.formatMs(group.p95),
+                   "p99":  $scope.formatMs(group.p99),
+                   "max":  $scope.formatMs(group.max)
+               });
+           });
+           return row;
        };
 
        // columns builders
