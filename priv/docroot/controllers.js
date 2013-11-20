@@ -19,7 +19,6 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
        }, false);
 
        //TODO: update only what needs to be updated!!!
-       //TODO: replace underscore with angular module
        $scope.updateUI = function (data) {
            // general
            $scope.hostname = data.hostname;
@@ -99,7 +98,7 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
                    function (h) { return h.id }
                );
                _.each(grouped, function (grouped, i) {
-                   var label = (i == "null") ? node : node + i;
+                   var label = (i == "null") ? node + "/unknown" : node + i;
                    result.push(
                        $scope.getHistogramRow(label, grouped)
                    );
@@ -140,12 +139,12 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
        $scope.getHistogramColumns = function() {
            return [{label: ""}, {label: ""},
                    {label: "Rate per second", headerClass: "alignRight"},
-                   {label: "Observations", headerClass: "alignRight"},
-                   {label: "Mean (ms)", headerClass: "alignRight"},
+                   {label: "Observations",    headerClass: "alignRight"},
+                   {label: "Mean (ms)",       headerClass: "alignRight"},
                    {label: "Standard deviation", headerClass: "alignRight"},
-                   {label: "95th (ms)", headerClass: "alignRight"},
-                   {label: "99th (ms)", headerClass: "alignRight"},
-                   {label: "Max (ms)", headerClass: "alignRight"}
+                   {label: "95th (ms)",       headerClass: "alignRight"},
+                   {label: "99th (ms)",       headerClass: "alignRight"},
+                   {label: "Max (ms)",        headerClass: "alignRight"}
                   ];
        };
 
