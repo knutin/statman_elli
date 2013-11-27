@@ -3,7 +3,6 @@
 var dashboardControllers = angular.module('dashboardControllers', []);
 dashboardApp.controller('DashboardCtrl', ["$scope",
    function DashboardCtrl($scope) {
-
        // table data definitions
        $scope.ratesGrid = {rows: 'ratesRows', columns: 'ratesCols'};
        $scope.gaugesGrid = {rows: 'gaugesRows', columns: 'gaugesCols'};
@@ -67,6 +66,7 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
            });
            return result;
        };
+       //TODO: handle only updates
        $scope.postProcessHistograms = function(data) {
            var histograms = _.filter(data, function (h) {
                return h.node instanceof Array
@@ -83,6 +83,7 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
            });
            return result;
        };
+       //TODO: handle only updates
        $scope.postProcessNodesHistograms = function(data) {
            var histograms = _.reject(data, function (h) {
                return h.node instanceof Array
@@ -168,7 +169,7 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
            return numeral( (value / 1000).toFixed(4) ).format('0,0.0000');
        };
        $scope.formatNumber = function (value) {
-           return numeral(value).format('0,0');
+           return numeral(value).format('0,0.0000');
        };
    }
 ]);
