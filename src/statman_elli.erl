@@ -39,13 +39,12 @@ handle(Req, Config) ->
              iolist_to_binary(
                jiffy:encode({[{metrics, lists:map(fun metric2json/1, Metrics)}]}))};
 
-
         [<<"statman">>, <<"media">> | Path] ->
             Filepath = filename:join([docroot(Config) | Path]),
             valid_path(Filepath) orelse throw({403, [], <<"Permission denied">>}),
             case file:read_file(Filepath) of
                 {ok, Bin} ->
-                    {ok, Bin};
+                    {ok, get_mimetype(Filepath), Bin};
                 {error, enoent} ->
                     {404, <<"Not found">>}
             end;
@@ -71,6 +70,15 @@ valid_path(Path) ->
         {_, _} -> false;
         nomatch -> true
     end.
+
+get_mimetype(Filepath) ->
+    Ext = filename:extension(Filepath),
+    Type = case lists:last(binary:split(Ext, [<<".">>])) of
+               <<"css">> -> <<"text/css">>;
+               <<"js">>  -> <<"text/javascript">>;
+               _         -> <<"text/plain">>
+           end,
+    [{<<"Content-Type">>, Type}].
 
 metric2json(Metric) ->
     {Id, Key} = id_key(Metric),
@@ -213,8 +221,9 @@ start_demo() ->
                     _ -> <<"unknown">>
                 end
         end,
+    {ok, Cwd} = file:get_cwd(),
     StatsConfig = [{name, elli_stats_demo},
-                   {docroot, "priv/docroot"},
+                   {docroot, filename:join([Cwd, "priv/docroot"])},
                    {identity_fun, IdentityFun}],
 
     Config = [
@@ -223,7 +232,6 @@ start_demo() ->
                       {elli_example_callback, []}
                      ]}
              ],
-
 
     A = setup(a),
     B = setup(b),
@@ -236,7 +244,6 @@ start_demo() ->
     rpc:call(A, statman_gauge_poller, start_link, []),
     rpc:call(B, statman_gauge_poller, start_link, []),
 
-
     elli:start_link([{callback, elli_middleware}, {callback_args, Config}]),
 
     ok.
@@ -248,4 +255,3 @@ setup(Name) ->
     rpc:call(Node, statman_server, start_link, [1000]),
     spawn(Node, ?MODULE, example_logger, []),
     Node.
-

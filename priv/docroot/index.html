@@ -1,123 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:ng="http://angularjs.org" ng-app="dashboardApp">
   <head>
     <meta charset="utf-8">
-    <title>statman</title>
+    <title>statman dasbhoard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <link href="statman/media/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="apple-touch-icon" href="/bootstrap/img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/bootstrap/img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/bootstrap/img/apple-touch-icon-114x114.png">
+    <link href="statman/media/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <style>
       body {
         padding-top: 60px;
+        font-size: 11px;
+      }
+      table {
+        table-layout: fixed;
+      }
+      table th, table td {
+        overflow: hidden;
+      }
+      .alignRight {
+        text-align: right;
       }
     </style>
-    <link href="statman/media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
-
   </head>
 
-  <body>
+  <body ng-controller="DashboardCtrl">
 
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" id="title" href="#">statman</a>
-          <!-- <div class="nav-collapse"> -->
-          <!--   <ul class="nav"> -->
-          <!--     <li class="active"><a href="#">Home</a></li> -->
-          <!--     <li><a href="#about">About</a></li> -->
-          <!--     <li><a href="#contact">Contact</a></li> -->
-          <!--   </ul> -->
-          <!-- </div><\!--/.nav-collapse -\-> -->
-        </div>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">statman dashboard</a>
       </div>
-    </div>
+      <p class="nav navbar-nav navbar-right navbar-text">{{hostname}}</p>
+    </nav>
 
     <div class="container">
-      <section id="counters">
-        <div class="page-header">
-          <h2>Rates</h2>
-        </div>
-        <table id="counters" class="table table-condensed">
-          <thead></thead>
-          <tbody></tbody>
-        </table>
-      </section>
 
-      <section id="gauges">
-        <div class="page-header">
-          <h2>Gauges</h2>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="panel panel-default">
+            <div class="panel-heading"><strong>Rates</strong></div>
+            <table class="table table-striped" simple-table data="ratesGrid"></table>
+          </div>
         </div>
-        <table id="gauges" class="table table-condensed">
-          <thead></thead>
-          <tbody></tbody>
-        </table>
-      </section>
-
-      <section id="histograms">
-        <div class="page-header">
-          <h2>Merged histograms <small id="histogram_nodes"></small></h2>
+        <div class="col-lg-6">
+          <div class="panel panel-default">
+            <div class="panel-heading"><strong>Gauges</strong></div>
+            <table class="table table-striped" simple-table data="gaugesGrid"></table>
+          </div>
         </div>
-        <table id="histograms" class="table table-condensed">
-          <thead>
-            <tr>
-              <th></th>
-              <th></th>
-              <th>Rate per second</th>
-              <th>Observations</th>
-              <th>Mean</th>
-              <th>Standard deviation</th>
-              <th>95th</th>
-              <th>99th</th>
-              <th>Max</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </section>
+      </div>
 
-
-        <section id="node_histograms">
-        <div class="page-header">
-          <h2>Node histograms <small id="histogram_nodes"></small></h2>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="panel panel-default">
+            <div class="panel-heading"><strong>Merged histograms</strong></div>
+            <table class="table table-striped" simple-grouped-table data="histMergedGrid"></table>
+          </div>
         </div>
-        <table id="node_histograms" class="table table-condensed">
-          <thead>
-            <tr>
-              <th></th>
-              <th></th>
-              <th>Rate per second</th>
-              <th>Observations</th>
-              <th>Mean</th>
-              <th>Standard deviation</th>
-              <th>95th</th>
-              <th>99th</th>
-              <th>Max</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </section>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="p`anel panel-default">
+            <div class="panel-heading"><strong>Node histograms</strong></div>
+            <table class="table table-striped" simple-grouped-table data="histNodesGrid"></table>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <footer>
+        <p>statman_elli: <a href="http://github.com/knutin/statman_elli/">GitHub</a></p>
+      </footer>
     </div>
-
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="statman/media/bootstrap/js/bootstrap.js"></script>
-    <script src="statman/media/underscore-min.js"></script>
-    <script src="statman/media/dashboard.js"></script>
-
   </body>
+  <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+       -->
+  <script type="text/javascript" src="statman/media/libs/jquery.min.js"></script>
+  <script type="text/javascript" src="statman/media/libs/underscore-min.js"></script>
+  <script type="text/javascript" src="statman/media/libs/bootstrap/js/bootstrap.js"></script>
+  <script type="text/javascript" src="statman/media/libs/numeral/numeral.js"></script>
+  <script type="text/javascript" src="statman/media/libs/angular/angular.js"></script>
+  <script type="text/javascript" src="statman/media/libs/angular/angular-route.js"></script>
+  <script type="text/javascript" src="statman/media/app.js"></script>
+  <script type="text/javascript" src="statman/media/controllers.js"></script>
 </html>
