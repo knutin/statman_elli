@@ -194,7 +194,11 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
            return numeral( (value / 1000).toFixed(4) ).format('0,0.0000');
        };
        $scope.formatNumber = function (value) {
-           return numeral(value).format('0,0.0000');
+           if (value % 1 != 0) {
+               return numeral(value).format('0,0.0000');
+           } else {
+               return numeral(value).format('0,0');
+           }
        };
    }
 ]);

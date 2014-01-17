@@ -54,8 +54,17 @@ var dashboardApp = angular.module('dashboardApp', [
             link: function($scope, $element, $attrs) {
                 var data = $scope.$eval($attrs.data);
 
+                //FIXME: duplicite helper as in controllers.js
                 var formatNumber = function(value) {
-                    return (value == "") ? value : numeral(value).format('0,0');
+                    if (value == "") {
+                        return value;
+                    } else {
+                        if (value % 1 != 0) {
+                            return numeral(value).format('0,0.0000');
+                        } else {
+                            return numeral(value).format('0,0');
+                        }
+                    }
                 };
 
                 var colsWatcher = function(newCol, oldCol) {
