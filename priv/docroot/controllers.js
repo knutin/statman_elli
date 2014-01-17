@@ -9,6 +9,8 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
        $scope.histNodesGrid = {rows: 'histNodesRows', columns: 'histCols'};
        $scope.histMergedGrid = {rows: 'histMergedRows', columns: 'histCols'};
 
+       $scope.cachedHists = [];
+
        // reload data from stream
        var stream = new EventSource("statman/stream");
        stream.addEventListener("message", function (e) {
@@ -36,9 +38,32 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
 
            // merged and node histagrams
            var histograms = $scope.getByType(data, "histogram");
+           //console.dir(histograms);
+           $scope.cachedHists = $scope.mergeHistograms($scope.cachedHists, histograms);
+           console.dir($scope.cachedHists);
+
            $scope.histCols = $scope.getHistogramColumns();
            $scope.histNodesRows = $scope.postProcessNodesHistograms(histograms);
-           $scope.histMergedRows = $scope.postProcessHistograms(histograms);;
+           $scope.histMergedRows = $scope.postProcessHistograms(histograms);
+       };
+
+       //TODO: key/host is unique value
+       $scope.mergeHistograms = function(a, b) {
+           var result = [];
+           for (var i = 0; i < b.length; i++) {
+               if (a.length > 0) {
+                   for (var y = 0; y < a.length; y++) {
+                       if (a[y].key == b[i].key) {
+                           result.push(b[i]);
+                       } else {
+                           result.push(a[i]);
+                       }
+                   }
+               } else {
+                   result.push(b[i]);
+               }
+           }
+           return result;
        };
 
        // helpers
