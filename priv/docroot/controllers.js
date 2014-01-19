@@ -19,7 +19,6 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
            });
        }, false);
 
-       //TODO: update only what needs to be updated!!!
        $scope.updateUI = function (data) {
            // general
            $scope.hostname = data.hostname;
@@ -43,8 +42,8 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
            console.dir($scope.cachedHists);
 
            $scope.histCols = $scope.getHistogramColumns();
-           $scope.histNodesRows = $scope.postProcessNodesHistograms(histograms);
-           $scope.histMergedRows = $scope.postProcessHistograms(histograms);
+           $scope.histNodesRows = $scope.postProcessNodesHistograms($scope.cachedHists);
+           $scope.histMergedRows = $scope.postProcessHistograms($scope.cachedHists);
        };
 
        //TODO: key/host is unique value
