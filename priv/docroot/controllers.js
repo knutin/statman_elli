@@ -9,7 +9,7 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
        $scope.histNodesGrid = {rows: 'histNodesRows', columns: 'histCols'};
        $scope.histMergedGrid = {rows: 'histMergedRows', columns: 'histCols'};
 
-       $scope.cachedHists = [];
+       $scope.cachedHists = {};
 
        // reload data from stream
        var stream = new EventSource("statman/stream");
@@ -20,6 +20,7 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
        }, false);
 
        $scope.updateUI = function (data) {
+
            // general
            $scope.hostname = data.hostname;
 
@@ -37,35 +38,28 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
 
            // merged and node histagrams
            var histograms = $scope.getByType(data, "histogram");
-           //console.dir(histograms);
-           $scope.cachedHists = $scope.mergeHistograms($scope.cachedHists, histograms);
-           console.dir($scope.cachedHists);
+           if (histograms && histograms.length > 0) {
+               $scope.cachedHists = $scope.mergeHistograms($scope.cachedHists, histograms);
 
-           $scope.histCols = $scope.getHistogramColumns();
-           $scope.histNodesRows = $scope.postProcessNodesHistograms($scope.cachedHists);
-           $scope.histMergedRows = $scope.postProcessHistograms($scope.cachedHists);
-       };
+               // postprocess cache into data object
+               var prepared = [];
+               _.each($scope.cachedHists, function (item) {
+                   prepared.push(item);
+               });
 
-       //TODO: key/host is unique value
-       $scope.mergeHistograms = function(a, b) {
-           var result = [];
-           for (var i = 0; i < b.length; i++) {
-               if (a.length > 0) {
-                   for (var y = 0; y < a.length; y++) {
-                       if (a[y].key == b[i].key) {
-                           result.push(b[i]);
-                       } else {
-                           result.push(a[i]);
-                       }
-                   }
-               } else {
-                   result.push(b[i]);
-               }
+               $scope.histCols = $scope.getHistogramColumns();
+               $scope.histNodesRows = $scope.postProcessNodesHistograms(prepared);
+               $scope.histMergedRows = $scope.postProcessHistograms(prepared);
            }
-           return result;
        };
 
        // helpers
+       $scope.mergeHistograms = function(cache, change) {
+           _.each(change, function (item) {
+               cache[item.node + item.key] = item;
+           });
+           return cache;
+       };
        $scope.postProcessData = function(nodes, data) {
            var grouped = _.groupBy(data, "key");
            var keys = _.keys(grouped).sort();
@@ -90,7 +84,6 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
            });
            return result;
        };
-       //TODO: handle only updates
        $scope.postProcessHistograms = function(data) {
            var histograms = _.filter(data, function (h) {
                return h.node instanceof Array
@@ -107,7 +100,6 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
            });
            return result;
        };
-       //TODO: handle only updates
        $scope.postProcessNodesHistograms = function(data) {
            var histograms = _.reject(data, function (h) {
                return h.node instanceof Array
