@@ -55,8 +55,18 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
 
        // helpers
        $scope.mergeHistograms = function(cache, change) {
+           // set all values to empty 1st
+           _.each(cache, function (old) {
+               _.each(old, function (prop, key) {
+                   if (key != "id" && key != "node" && key != "key") {
+                       old[key] = "";
+                   }
+               });
+           });
+
+           // update changed values
            _.each(change, function (item) {
-               cache[item.node + item.key] = item;
+               cache[item.node + ":" + item.key] = item;
            });
            return cache;
        };
@@ -182,13 +192,21 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
 
        // formatting helpers
        $scope.formatMs = function (value) {
-           return numeral( (value / 1000).toFixed(4) ).format('0,0.0000');
+           if (value != "") {
+               return numeral( (value / 1000).toFixed(4) ).format('0,0.0000');
+           } else {
+               return value;
+           }
        };
        $scope.formatNumber = function (value) {
-           if (value % 1 != 0) {
-               return numeral(value).format('0,0.0000');
+           if (value != "") {
+               if (value % 1 != 0) {
+                   return numeral(value).format('0,0.0000');
+               } else {
+                   return numeral(value).format('0,0');
+               }
            } else {
-               return numeral(value).format('0,0');
+               return value;
            }
        };
    }
