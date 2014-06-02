@@ -15,9 +15,9 @@ var dashboardApp = angular.module('dashboardApp', [
                         var header = "<thead><tr>";
                         angular.forEach(cols, function(c) {
                             if (c.headerClass != undefined) {
-                                header += "<th class=\"" + c.headerClass + "\">" + c.label +"</th>";
+                                header += "<th title=\"" + c.label + "\" class=\"" + c.headerClass + "\">" + c.label +"</th>";
                             } else {
-                                header += "<th>" + c.label +"</th>";
+                                header += "<th title=\"" + c.label + "\">" + c.label +"</th>";
                             }
                         });
                         header += "</tr></thead>";
@@ -36,7 +36,7 @@ var dashboardApp = angular.module('dashboardApp', [
                                 if (field != "key") {
                                     body += "<td style=\"text-align:right\">" + cell +"</td>";
                                 } else {
-                                    body += "<td>" + cell +"</td>";
+                                    body += "<td title=\"" + cell + "\">" + cell +"</td>";
                                 }
                             });
                             body += "</tr>";
@@ -74,9 +74,9 @@ var dashboardApp = angular.module('dashboardApp', [
                         var header = "<thead><tr>";
                         angular.forEach(cols, function(c) {
                             if (c.headerClass != undefined) {
-                                header += "<th class=\"" + c.headerClass + "\">" + c.label +"</th>";
+                                header += "<th title=\"" + c.label + "\" class=\"" + c.headerClass + "\">" + c.label +"</th>";
                             } else {
-                                header += "<th>" + c.label +"</th>";
+                                header += "<th title=\"" + c.label + "\">" + c.label +"</th>";
                             }
                         });
                         header += "</tr></thead>";
@@ -91,7 +91,7 @@ var dashboardApp = angular.module('dashboardApp', [
                         var body = "<tbody>";
                         angular.forEach(groups, function(group) {
                             body += "<tr>";
-                            body += "<td colspan=\"9\"><strong>" + group.label + "</strong></td>";
+                            body += "<td title=\"" + group.label + "\" colspan=\"9\"><strong>" + group.label + "</strong></td>";
                             body += "</tr>";
                             angular.forEach(group.items, function(row) {
                                 body += "<tr>";
@@ -99,7 +99,7 @@ var dashboardApp = angular.module('dashboardApp', [
                                     if (field != "key") {
                                         body += "<td style=\"text-align:right\">" + cell +"</td>";
                                     } else {
-                                        body += "<td colspan=\"2\" style=\"padding-left: 25px;\">" + cell +"</td>";
+                                        body += "<td colspan=\"2\" style=\"padding-left: 10px;\" title=\"" + cell + "\">" + cell +"</td>";
                                     }
                                 });
                                 body += "</tr>";
