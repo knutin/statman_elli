@@ -47,9 +47,14 @@ dashboardApp.controller('DashboardCtrl', ["$scope",
                    prepared.push(item);
                });
 
+               // sort cached objects by key
+               var sorted = _.sortBy(prepared, function (item) {
+                   return item.key;
+               });
+
                $scope.histCols = $scope.getHistogramColumns();
-               $scope.histNodesRows = $scope.postProcessNodesHistograms(prepared);
-               $scope.histMergedRows = $scope.postProcessHistograms(prepared);
+               $scope.histNodesRows = $scope.postProcessNodesHistograms(sorted);
+               $scope.histMergedRows = $scope.postProcessHistograms(sorted);
            }
        };
 
